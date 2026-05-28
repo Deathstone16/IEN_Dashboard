@@ -1,0 +1,19 @@
+# Opencode config (no del proyecto)
+.opencode.json
+.opencode/
+AGENTS.md
+skills-lock.json
+
+# Skills y sub-agentes
+.agents/
+mis-agentes/
+
+# Especificación de diseño
+.design/
+
+# Documentos del TP
+TP1-*.pdf
+
+# Sistema
+.DS_Store
+Thumbs.db

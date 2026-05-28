@@ -1,0 +1,253 @@
+*, *::before, *::after { transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease; }
+
+html { scroll-behavior: smooth; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-secondary); }
+
+:root, .light {
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #F8FAFC;
+  --bg-card: #FFFFFF;
+  --text-primary: #0F172A;
+  --text-secondary: #64748B;
+  --text-muted: #94A3B8;
+  --border: #E2E8F0;
+  --hover-bg: #F1F5F9;
+  --accent-blue: #3B82F6;
+  --accent-green: #10B981;
+  --accent-purple: #8B5CF6;
+  --accent-orange: #F97316;
+  --accent-red: #EF4444;
+  --sidebar-bg: #F8FAFC;
+  --sidebar-hover: #F1F5F9;
+  --chart-label-bg: #FFFFFF;
+  --chart-label-text: #0F172A;
+  --sparkline-fill-opacity: 0.08;
+}
+
+.dark {
+  --bg-primary: #0F172A;
+  --bg-secondary: #1E293B;
+  --bg-card: #1E293B;
+  --text-primary: #F8FAFC;
+  --text-secondary: #64748B;
+  --text-muted: #94A3B8;
+  --border: #334155;
+  --hover-bg: #334155;
+  --accent-blue: #3B82F6;
+  --accent-green: #10B981;
+  --accent-purple: #8B5CF6;
+  --accent-orange: #F97316;
+  --accent-red: #EF4444;
+  --sidebar-bg: #1E293B;
+  --sidebar-hover: #334155;
+  --chart-label-bg: #1E293B;
+  --chart-label-text: #F8FAFC;
+  --sparkline-fill-opacity: 0.15;
+}
+
+.nav-item { transition: all 0.2s ease; }
+.nav-item.active { position: relative; }
+.nav-item.active::before { content: ''; position: absolute; left: -12px; top: 50%; transform: translateY(-50%); width: 3px; height: 20px; border-radius: 0 3px 3px 0; background: var(--accent-blue); }
+
+.role-btn { transition: all 0.25s ease; border: 1px solid transparent; }
+.activity-row { transition: all 0.15s ease; }
+.activity-row:hover { background: var(--hover-bg); }
+
+#sidebar { transition: transform 0.3s ease, width 0.3s ease; }
+#sidebarOverlay { transition: opacity 0.3s ease; }
+
+@media (max-width: 1023px) {
+  #sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 40;
+    transform: translateX(-100%);
+    width: 16rem;
+  }
+  #sidebar.mobile-open { transform: translateX(0); }
+  #sidebar.collapsed { transform: translateX(-100%); }
+}
+
+.kpi-card { transition: all 0.2s ease; }
+.kpi-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transform: translateY(-1px);
+}
+.dark .kpi-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.tooltip-content {
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  line-height: 1.4;
+}
+
+.activity-row .w-2.h-2 { transition: transform 0.2s ease; }
+.activity-row:hover .w-2.h-2 { transform: scale(1.3); }
+
+.chart-container { transition: opacity 0.3s ease; }
+
+/* === Theme utility classes === */
+.bg-primary { background: var(--bg-primary); }
+.bg-card { background: var(--bg-card); }
+.bg-sidebar { background: var(--sidebar-bg); }
+.bg-secondary { background: var(--bg-secondary); }
+.bg-overlay { background: rgba(0,0,0,0.5); }
+.text-accent-blue-hover:hover { color: var(--accent-blue); opacity: 0.8; }
+.text-primary { color: var(--text-primary); }
+.text-secondary { color: var(--text-secondary); }
+.text-muted { color: var(--text-muted); }
+.border-theme { border-color: var(--border); }
+.divide-theme > :not([hidden]) ~ :not([hidden]) { border-color: var(--border); }
+
+.bg-hover { background: var(--hover-bg); }
+.hover-bg:hover { background: var(--hover-bg); }
+
+/* Accent backgrounds (10% opacity) */
+.bg-accent-blue-10 { background: rgba(59,130,246,0.1); }
+.bg-accent-green-10 { background: rgba(16,185,129,0.1); }
+.bg-accent-purple-10 { background: rgba(139,92,246,0.1); }
+.bg-accent-orange-10 { background: rgba(249,115,22,0.1); }
+.bg-accent-red-10 { background: rgba(239,68,68,0.1); }
+
+/* Accent colors */
+.text-accent-blue { color: var(--accent-blue); }
+.text-accent-green { color: var(--accent-green); }
+.text-accent-purple { color: var(--accent-purple); }
+.text-accent-orange { color: var(--accent-orange); }
+.text-accent-red { color: var(--accent-red); }
+.bg-accent-blue { background: var(--accent-blue); }
+
+/* Role buttons */
+.role-active { background: #3B82F6; color: white; border-color: #3B82F6; box-shadow: 0 1px 3px rgba(59,130,246,0.3); }
+.role-inactive { background: transparent; color: var(--text-muted); border-color: transparent; }
+.role-inactive:hover { background: var(--hover-bg); color: var(--text-secondary); }
+
+/* Change indicators */
+.change-up { color: var(--accent-green); }
+.change-down { color: var(--accent-orange); }
+
+/* Tooltip positioning and theming */
+.tooltip-content {
+  position: absolute;
+  z-index: 50;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  width: 14rem;
+  padding: 0.5rem;
+  font-size: 0.75rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+  pointer-events: none;
+}
+.tooltip-box {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+}
+
+/* Spinner with themed colors */
+.spinner-theme {
+  border-color: var(--border);
+  border-top-color: var(--accent-blue);
+}
+
+/* SVG text colors for charts */
+.svg-text-center { fill: var(--text-primary); }
+.svg-text-muted { fill: var(--text-muted); }
+.svg-grid-line { stroke: var(--border); }
+
+/* Modal */
+.modal-overlay { background: rgba(0,0,0,0.5); }
+.modal-body { background: var(--bg-card); border: 1px solid var(--border); }
+
+/* ==========================================
+   ENHANCEMENTS — visual polish additions
+   ========================================== */
+
+/* --- Tooltip show state (hover, focus, or JS class) --- */
+.tooltip-trigger:hover .tooltip-content,
+.tooltip-trigger:focus .tooltip-content,
+.tooltip-content.tooltip-visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* --- SVG chart hover effects --- */
+#lineChart circle {
+  transition: r 0.2s ease, fill 0.2s ease;
+  cursor: pointer;
+}
+#lineChart circle:hover {
+  r: 5;
+}
+#donutChart path {
+  transition: stroke-width 0.2s ease, opacity 0.2s ease;
+  cursor: pointer;
+}
+#donutChart path:hover {
+  stroke-width: 30;
+  opacity: 0.8;
+}
+
+/* --- Loading state improvements --- */
+#loadingState .animate-spin {
+  animation-duration: 0.8s;
+}
+#loadingState p {
+  animation: pulse-text 1.5s ease-in-out infinite;
+}
+@keyframes pulse-text {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* --- Light mode overlay refinements --- */
+.light .modal-overlay,
+.light .bg-overlay {
+  background: rgba(0,0,0,0.3);
+}
+
+/* --- KPI transitions for role switching --- */
+.kpi-value {
+  transition: all 0.3s ease;
+}
+.kpi-change {
+  transition: all 0.3s ease;
+}
+
+/* --- Modal entrance animation --- */
+.modal-body {
+  animation: modal-in 0.2s ease;
+}
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* --- Mobile responsive refinements --- */
+@media (max-width: 639px) {
+  .kpi-card {
+    padding: 1rem;
+  }
+  .kpi-value {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+  #periodoSelector {
+    width: 100%;
+  }
+}
