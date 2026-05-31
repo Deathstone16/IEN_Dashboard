@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" class="dark">
+<html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,14 +18,11 @@
   <meta name="twitter:title" content="StartupTools — Dashboard de métricas para startups">
   <meta name="twitter:description" content="Métricas de negocio en tiempo real para tu startup. Personalizable por rol.">
   <meta name="twitter:image" content="https://startuptools.app/og-image.png">
-  <!-- Schema.org structured data: referencia en estructura/schema.json -->
-  <script src="https://cdn.tailwindcss.com"></script> <!-- CDN unavoidable for buildless Tailwind -->
-  <script src="../estilos/tailwind.config.js"></script> <!-- config DESPUÉS del CDN (tailwind ya existe) -->
-  <link rel="stylesheet" href="../estilos/dashboard.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <!-- Schema.org structured data (JSON-LD) incluido inline arriba -->
+  <link rel="stylesheet" href="css/styles.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="icon" type="image/svg+xml" href="../src/favicon.svg">
-  <script type="module" src="../logica/dashboard.js" defer></script>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <script src="js/app.js" defer></script>
 </head>
 <body class="font-sans antialiased bg-primary text-primary">
 
@@ -222,9 +219,35 @@
           <h2 class="text-lg font-semibold">Actividad reciente</h2>
           <a href="/actividad" class="text-sm font-medium transition-colors text-accent-blue" aria-label="Ver toda la actividad">Ver todo →</a>
         </div>
-        <ul id="activityList" class="divide-y divide-theme"></ul>
+        <div class="overflow-x-auto">
+          <table id="activityTable" class="w-full text-sm">
+            <thead>
+              <tr class="border-b border-theme text-xs uppercase tracking-wider text-muted">
+                <th class="px-6 py-3 text-left font-medium">Transacción</th>
+                <th class="px-6 py-3 text-left font-medium">Detalle</th>
+                <th class="px-6 py-3 text-right font-medium">Tiempo</th>
+              </tr>
+            </thead>
+            <tbody id="activityBody" class="divide-y divide-theme"></tbody>
+          </table>
+        </div>
       </section>
+
+      <!-- Download Report -->
+      <div class="flex justify-center py-4">
+        <button id="downloadReportBtn"
+                class="px-6 py-2.5 rounded-lg text-sm font-medium text-white transition-all duration-200 bg-accent-blue hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-accent-blue focus:ring-offset-2">
+          Descargar Reporte Semanal
+        </button>
+      </div>
     </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-theme px-6 py-4 mt-8">
+      <p class="text-xs text-muted text-center">
+        StartupTools © 2025 — Dashboard de métricas para startups. Todos los derechos reservados.
+      </p>
+    </footer>
   </main>
 </div>
 

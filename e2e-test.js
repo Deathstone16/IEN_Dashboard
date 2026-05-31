@@ -22,7 +22,7 @@ const MIME_TYPES = {
 // ── Servidor HTTP mínimo (sin dependencias) ──
 function startServer(port) {
   const server = createServer((req, res) => {
-    let filePath = join(BASE, req.url === '/' ? 'estructura/index.html' : req.url);
+    let filePath = join(BASE, req.url === '/' ? 'index.html' : req.url);
     const ext = extname(filePath);
 
     try {
@@ -122,9 +122,9 @@ async function runTests() {
 
   // ── 8. Actividad reciente ──
   await test('8. Actividad reciente con items', async () => {
-    const list = page.locator('#activityList');
-    const items = await list.locator('li').count();
-    if (items === 0) throw new Error('Activity list vacía');
+    const tbody = page.locator('#activityBody');
+    const rows = await tbody.locator('tr').count();
+    if (rows === 0) throw new Error('Activity table vacía');
   });
 
   // ── 9. Título del dashboard ──
@@ -237,15 +237,15 @@ async function runTests() {
 
   // ── 20. Tooltips ──
   await test('20. Tooltip se muestra al hover', async () => {
-    const trigger = page.locator('.tooltip-trigger').first();
-    await trigger.hover();
-    await page.waitForTimeout(300);
-    const tip = trigger.locator('.tooltip-content');
-    const isVisible = await tip.evaluate(el => {
-      const style = window.getComputedStyle(el);
-      return style.opacity === '1' || parseFloat(style.opacity) > 0;
+    const hasJsClass = await page.evaluate(() => {
+      const trigger = document.querySelector('.tooltip-trigger');
+      if (!trigger) return false;
+      trigger.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+      const tip = trigger.querySelector('.tooltip-content');
+      if (!tip) return false;
+      return tip.classList.contains('tooltip-visible');
     });
-    if (!isVisible) throw new Error('Tooltip no visible al hover');
+    if (!hasJsClass) throw new Error('Tooltip no visible al hover');
   });
 
   // ── 21. Errores de consola durante el test ──
