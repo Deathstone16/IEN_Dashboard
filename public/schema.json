@@ -1,0 +1,13 @@
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "StartupTools",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "description": "Dashboard de métricas para startups con personalización por rol y modo oscuro/claro",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}

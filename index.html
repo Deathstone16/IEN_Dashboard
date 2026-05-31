@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StartupTools — Dashboard de métricas para startups | SaaS analytics</title>
+  <meta name="description" content="Dashboard interactivo para startups con métricas de negocio en tiempo real: usuarios activos, ventas, MRR, CAC, churn y más. Personalizable por rol: fundador, equipo e inversor.">
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="StartupTools">
+  <meta name="keywords" content="startup dashboard, métricas SaaS, analytics, KPIs, MRR, CAC, churn, growth metrics">
+  <link rel="canonical" href="https://startuptools.app/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="StartupTools — Dashboard de métricas para startups">
+  <meta property="og:description" content="Métricas de negocio en tiempo real: usuarios activos, ventas, MRR, CAC y churn. Personalizable por rol.">
+  <meta property="og:image" content="https://startuptools.app/og-image.png">
+  <meta property="og:url" content="https://startuptools.app/">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="StartupTools — Dashboard de métricas para startups">
+  <meta name="twitter:description" content="Métricas de negocio en tiempo real para tu startup. Personalizable por rol.">
+  <meta name="twitter:image" content="https://startuptools.app/og-image.png">
+  <!-- Schema.org structured data: referencia en public/schema.json -->
+  <link rel="stylesheet" href="./style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="./public/assets/favicon.svg">
+  <script type="module" src="./src/index.js" defer></script>
+</head>
+<body>
+  <div class="app-layout">
+
+  <!-- Sidebar -->
+    <div id="sidebarOverlay" class="sidebar-overlay hidden"></div>
+
+    <aside id="sidebar" class="sidebar" role="navigation" aria-label="Navegación principal">
+      <div class="sidebar-header">
+        <div class="brand-logo">ST</div>
+        <span class="logo-text">StartupTools</span>
+      </div>
+      <nav class="nav-menu">
+        <ul class="nav-list">
+          <li>
+            <a href="/" class="nav-item active" aria-current="page">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="/usuarios" class="nav-item">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+              <span>Usuarios</span>
+            </a>
+          </li>
+          <li>
+            <a href="/ventas" class="nav-item">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+              <span>Ventas</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="role-panel">
+          <p class="role-label">Rol</p>
+          <div id="roleSelector" class="role-group">
+            <button class="role-btn role-active" data-role="founder">Fundador</button>
+            <button class="role-btn role-inactive" data-role="team">Equipo</button>
+            <button class="role-btn role-inactive" data-role="investor">Inversor</button>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button id="sidebarToggle" class="menu-button" aria-label="Abrir menú" aria-expanded="false">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+          <h1 id="dashboardTitle" class="dashboard-title">Dashboard</h1>
+          <select id="periodoSelector" class="period-selector">
+            <option value="1m">Este mes</option>
+            <option value="3m">Último trimestre</option>
+            <option value="6m" selected>Últimos 6 meses</option>
+            <option value="12m">Histórico</option>
+          </select>
+        </div>
+        <div class="topbar-right">
+          <button id="themeToggle" class="icon-button" title="Cambiar tema" aria-label="Cambiar tema">
+            <svg class="sun-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+            <svg class="moon-icon hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+          </button>
+          <div id="avatarInitials" class="avatar">ST</div>
+        </div>
+      </header>
+
+      <div id="loadingState" class="state-view loading-screen">
+        <div class="state-message">
+          <div class="spinner-theme animate-spin"></div>
+          <p class="text-muted">Cargando datos del dashboard...</p>
+        </div>
+      </div>
+
+      <div id="errorState" class="state-view error-screen hidden">
+        <div class="state-message">
+          <div class="error-icon-wrapper">
+            <div class="error-icon-bg">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" role="img" aria-label="Error"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg>
+            </div>
+          </div>
+          <div>
+            <h2 class="text-lg font-semibold text-primary">Error al cargar datos</h2>
+            <p class="error-message text-sm text-muted"></p>
+          </div>
+          <button id="retryBtn" class="btn-accent-blue">Reintentar</button>
+        </div>
+      </div>
+
+      <div id="dashboardContent" class="page-body hidden">
+        <section aria-label="Métricas clave" id="kpiRow" class="kpi-grid">
+          <article class="kpi-card card" data-accent="blue">
+            <div class="kpi-meta">
+              <div class="meta-left">
+                <div class="kpi-icon bg-accent-blue-10"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg></div>
+                <span class="kpi-label-text">Usuarios activos</span>
+                <span class="tooltip-trigger">
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  <span class="tooltip-content tooltip-box"></span>
+                </span>
+              </div>
+            </div>
+            <div class="kpi-stats">
+              <div>
+                <span class="kpi-value">2,847</span>
+                <span class="kpi-change">+12.5%</span>
+              </div>
+              <div class="sparkline"></div>
+            </div>
+          </article>
+          <article class="kpi-card card" data-accent="green">
+            <div class="kpi-meta">
+              <div class="meta-left">
+                <div class="kpi-icon bg-accent-green-10"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg></div>
+                <span class="kpi-label-text">Ventas mensuales</span>
+                <span class="tooltip-trigger">
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  <span class="tooltip-content tooltip-box"></span>
+                </span>
+              </div>
+            </div>
+            <div class="kpi-stats">
+              <div>
+                <span class="kpi-value">$48.6K</span>
+                <span class="kpi-change">+8.2%</span>
+              </div>
+              <div class="sparkline"></div>
+            </div>
+          </article>
+          <article class="kpi-card card" data-accent="purple">
+            <div class="kpi-meta">
+              <div class="meta-left">
+                <div class="kpi-icon bg-accent-purple-10"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg></div>
+                <span class="kpi-label-text">Crecimiento</span>
+                <span class="tooltip-trigger">
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  <span class="tooltip-content tooltip-box"></span>
+                </span>
+              </div>
+            </div>
+            <div class="kpi-stats">
+              <div>
+                <span class="kpi-value">23.4%</span>
+                <span class="kpi-change">-2.1%</span>
+              </div>
+              <div class="sparkline"></div>
+            </div>
+          </article>
+          <article class="kpi-card card" data-accent="orange">
+            <div class="kpi-meta">
+              <div class="meta-left">
+                <div class="kpi-icon bg-accent-orange-10"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+                <span class="kpi-label-text">MRR</span>
+                <span class="tooltip-trigger">
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  <span class="tooltip-content tooltip-box"></span>
+                </span>
+              </div>
+            </div>
+            <div class="kpi-stats">
+              <div>
+                <span class="kpi-value">$12.4K</span>
+                <span class="kpi-change">+5.8%</span>
+              </div>
+              <div class="sparkline"></div>
+            </div>
+          </article>
+        </section>
+
+        <section aria-label="Gráficos de métricas" class="chart-grid">
+          <div class="chart-panel wide">
+            <div class="section-header">
+              <h2>Ventas mensuales</h2>
+              <span id="chartPeriodLabel" class="text-xs text-muted">Últimos 6 meses</span>
+            </div>
+            <div id="lineChart" class="chart-frame" role="img" aria-label="Gráfico de ventas mensuales de los últimos 6 meses"></div>
+          </div>
+          <div class="chart-panel">
+            <div class="section-header">
+              <h2>Usuarios</h2>
+              <span class="text-xs text-muted">Distribución</span>
+            </div>
+            <div id="donutChart" class="chart-frame donut-chart" role="img" aria-label="Gráfico de distribución de usuarios"></div>
+          </div>
+        </section>
+
+        <section aria-label="Actividad reciente" class="activity-panel">
+          <div class="section-header section-header-inner">
+            <h2>Actividad reciente</h2>
+            <a href="/actividad" class="link-accent">Ver todo →</a>
+          </div>
+          <ul id="activityList" class="activity-list"></ul>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <div id="detailModal" role="dialog" aria-modal="true" aria-label="Detalle de transacción" class="modal-overlay hidden">
+    <div class="modal-body">
+      <div class="modal-header">
+        <h3 class="text-lg font-semibold text-primary">Detalle de transacción</h3>
+        <button id="closeModal" class="close-button icon-button hover-bg" aria-label="Cerrar detalle">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div id="modalBody" class="modal-content"></div>
+    </div>
+  </div>
+</body>
+</html>
