@@ -168,6 +168,14 @@ html { scroll-behavior: smooth; }
 .modal-overlay { background: rgba(0,0,0,0.5); }
 .modal-body { background: var(--bg-card); border: 1px solid var(--border); }
 
+/* Custom colors via data attributes (replaces inline style="") */
+.subscription-color[data-plan="Basic"] { color: var(--accent-blue); }
+.subscription-color[data-plan="Pro"] { color: var(--accent-green); }
+.subscription-color[data-plan="Enterprise"] { color: var(--accent-purple); }
+
+.activity-dot-activo { background: var(--accent-green); }
+.activity-dot-inactivo { background: var(--accent-orange); }
+
 /* ==========================================
    ENHANCEMENTS — visual polish additions
    ========================================== */

@@ -309,8 +309,7 @@ export function renderActivity(activity) {
     .map(
       (item) => `
     <li class="activity-row flex items-center gap-4 px-6 py-4 cursor-pointer" data-id="${item.id}">
-      <span class="w-2 h-2 rounded-full flex-shrink-0"
-            style="background:${colorPorTipo[item.tipo] || 'var(--accent-blue)'}"
+      <span class="w-2 h-2 rounded-full flex-shrink-0 activity-dot-${item.tipo}"
             aria-hidden="true"></span>
       <div class="flex-1 min-w-0">
         <p class="text-sm font-medium truncate">${item.titulo}</p>

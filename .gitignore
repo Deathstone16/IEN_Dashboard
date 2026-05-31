@@ -17,3 +17,8 @@ TP1-*.pdf
 # Sistema
 .DS_Store
 Thumbs.db
+
+# Node (solo para tests locales)
+node_modules/
+package.json
+package-lock.json

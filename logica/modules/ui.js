@@ -168,7 +168,7 @@ export function openModal(id) {
       </div>
       <div class="flex justify-between py-1">
         <span class="text-muted">Plan:</span>
-        <span class="font-medium" style="color:${COLOR_SUSCRIPCION[item.tipo_suscripcion] || '#3B82F6'}">${item.tipo_suscripcion}</span>
+        <span class="font-medium subscription-color" data-plan="${item.tipo_suscripcion}">${item.tipo_suscripcion}</span>
       </div>
       <div class="flex justify-between py-1">
         <span class="text-muted">Monto:</span>

@@ -1,6 +1,8 @@
 // StartupTools — Configuración de Tailwind CSS
-// Modo dark por clase, fuente Inter como predeterminada
-tailwind.config = {
+// Se carga después del CDN (tailwind ya existe como global).
+// Asignación segura por si el CDN tardara en cargar.
+var tw = window.tailwind || {};
+tw.config = {
   darkMode: 'class',
   theme: {
     extend: {
@@ -8,3 +10,4 @@ tailwind.config = {
     },
   },
 };
+window.tailwind = tw;
