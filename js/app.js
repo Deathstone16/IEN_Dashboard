@@ -2,29 +2,22 @@
 // STARTUPTOOLS — APP
 // ============================================================
 // Archivo único consolidado de todo el JavaScript del dashboard.
-// Sin imports/exports — script regular cargado con <script src="js/app.js" defer></script>
+// Clases semánticas en español.
 // ============================================================
 
 // ============================================================
 // 1. STATE
 // ============================================================
 
-/**
- * createStore(initialState)
- * Crea un store simple con getState, setState y subscribe.
- * setState(partial) mergea parcialmente y notifica a todos los listeners.
- */
 function createStore(initialState) {
   let state = { ...initialState };
   const listeners = new Set();
 
   return {
-    /** Devuelve una copia del estado actual */
     getState() {
       return state;
     },
 
-    /** Mergea `partial` en el estado y notifica a suscriptores */
     setState(partial) {
       state = { ...state, ...partial };
       listeners.forEach((listener) => {
@@ -36,8 +29,6 @@ function createStore(initialState) {
       });
     },
 
-    /** Registra un listener que se ejecutará en cada setState().
-     *  Devuelve una función para cancelar la suscripción. */
     subscribe(listener) {
       listeners.add(listener);
       return () => listeners.delete(listener);
@@ -45,30 +36,25 @@ function createStore(initialState) {
   };
 }
 
-// --- Estado inicial ---
 const initialState = {
-  theme: 'dark',           // 'dark' | 'light'
-  role: 'founder',         // 'founder' | 'team' | 'investor'
-  periodo: '6m',           // '1m' | '3m' | '6m' | '12m'
-  sidebarOpen: true,       // sidebar abierto/cerrado en mobile
-  rawData: [],             // 1000 registros de la API
-  loading: true,           // true mientras se descarga
-  error: null,             // mensaje de error si falla el fetch
-
-  // Filtros avanzados (se apilan AND)
-  dateRangeStart: null,    // objeto Date | null
-  dateRangeEnd: null,      // objeto Date | null
-  planFilter: null,        // 'Basic' | 'Pro' | 'Enterprise' | null
+  theme: 'dark',
+  role: 'founder',
+  periodo: '6m',
+  sidebarOpen: true,
+  rawData: [],
+  loading: true,
+  error: null,
+  dateRangeStart: null,
+  dateRangeEnd: null,
+  planFilter: null,
 };
 
-/** Instancia única del store */
 const store = createStore(initialState);
 
 // ============================================================
-// 2. COMPUTE — CONSTANTS
+// 2. CONSTANTS
 // ============================================================
 
-/** Mensajes de ayuda para tooltips de cada KPI */
 const tooltips = {
   'Usuarios activos': 'Usuarios con estado activo en la plataforma',
   'Ventas mensuales': 'Suma de todas las ventas del mes actual',
@@ -84,46 +70,30 @@ const tooltips = {
   'Churn': 'Tasa de bajas — proporción de usuarios inactivos',
 };
 
-/** Nombres abreviados de meses para el eje X del gráfico */
 const NOMBRES_MESES = [
   'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
   'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic',
 ];
 
-/** Colores asignados a cada tipo de suscripción */
 const COLOR_SUSCRIPCION = {
-  Basic: '#3B82F6',       // azul
-  Pro: '#10B981',         // verde
-  Enterprise: '#8B5CF6',  // púrpura
+  Basic: '#3B82F6',
+  Pro: '#10B981',
+  Enterprise: '#8B5CF6',
 };
 
 // ============================================================
 // 3. UTILS
 // ============================================================
 
-/**
- * formatCurrency(value)
- * Formatea un número como moneda en USD.
- * Ejemplo: 12345 → "$12,345"
- */
 function formatCurrency(value) {
   return `$${Math.round(value).toLocaleString('en-US')}`;
 }
 
-/**
- * formatPercentage(value)
- * Formatea un número como porcentaje con signo.
- * Ejemplo: 12.5 → "+12.5%", -3.2 → "-3.2%"
- */
 function formatPercentage(value) {
   const signo = value >= 0 ? '+' : '';
   return `${signo}${value.toFixed(1)}%`;
 }
 
-/**
- * getRelativeTime(date)
- * Devuelve un string legible de tiempo relativo (hace X min/h/días).
- */
 function getRelativeTime(date) {
   const ahora = new Date();
   const diffMs = ahora - date;
@@ -136,11 +106,6 @@ function getRelativeTime(date) {
   return `hace ${diffDias} día${diffDias > 1 ? 's' : ''}`;
 }
 
-/**
- * debounce(fn, delay)
- * Wrapper que retrasa la ejecución hasta que pasen `delay` ms
- * desde la última invocación.
- */
 function debounce(fn, delay = 150) {
   let timer;
   return (...args) => {
@@ -149,11 +114,6 @@ function debounce(fn, delay = 150) {
   };
 }
 
-/**
- * generateCSV(data, columns)
- * Genera un string CSV a partir de un array de objetos.
- * columns = [{ key, label }]
- */
 function generateCSV(data, columns) {
   const header = columns.map((c) => c.label).join(',');
   const rows = data.map((item) =>
@@ -165,10 +125,6 @@ function generateCSV(data, columns) {
   return [header, ...rows].join('\n');
 }
 
-/**
- * downloadFile(content, filename, mimeType)
- * Dispara la descarga de un archivo en el navegador.
- */
 function downloadFile(content, filename, mimeType = 'text/csv;charset=utf-8;') {
   const blob = new Blob([content], { type: mimeType });
   const url = URL.createObjectURL(blob);
@@ -183,27 +139,18 @@ function downloadFile(content, filename, mimeType = 'text/csv;charset=utf-8;') {
 }
 
 // ============================================================
-// 4. COMPUTE — FUNCTIONS
+// 4. COMPUTE
 // ============================================================
 
-/**
- * parseFecha(fechaStr)
- * Convierte "M/d/yyyy" a objeto Date de JavaScript.
- */
 function parseFecha(fechaStr) {
   const partes = fechaStr.split('/');
   return new Date(
-    parseInt(partes[2]),       // año
-    parseInt(partes[0]) - 1,   // mes (0-indexado)
-    parseInt(partes[1])        // día
+    parseInt(partes[2]),
+    parseInt(partes[0]) - 1,
+    parseInt(partes[1])
   );
 }
 
-/**
- * agruparPorMes(data)
- * Agrupa registros por mes (clave "YYYY-MM").
- * Devuelve: { "2025-06": [...], "2025-07": [...], ... }
- */
 function agruparPorMes(data) {
   const grupos = {};
   data.forEach((registro) => {
@@ -215,51 +162,30 @@ function agruparPorMes(data) {
   return grupos;
 }
 
-/**
- * ordenarClavesPorFecha(claves)
- * Ordena array de strings "YYYY-MM" de más antiguo a más nuevo.
- */
 function ordenarClavesPorFecha(claves) {
   return [...claves].sort();
 }
 
-/**
- * obtenerDatosFiltrados()
- * Aplica los filtros del store (dateRangeStart, dateRangeEnd, planFilter)
- * sobre rawData. Devuelve el array filtrado (o rawData si no hay filtros).
- */
 function obtenerDatosFiltrados() {
   const { rawData, dateRangeStart, dateRangeEnd, planFilter } = store.getState();
   if (!rawData || rawData.length === 0) return [];
 
-  // Si no hay filtros activos, devolvemos rawData completo
   if (!dateRangeStart && !dateRangeEnd && !planFilter) {
     return rawData;
   }
 
   return rawData.filter((item) => {
-    // Filtro por rango de fechas
     if (dateRangeStart || dateRangeEnd) {
       const fechaItem = parseFecha(item.fecha);
       if (dateRangeStart && fechaItem < dateRangeStart) return false;
       if (dateRangeEnd && fechaItem > dateRangeEnd) return false;
     }
-    // Filtro por plan de suscripción
     if (planFilter && item.tipo_suscripcion !== planFilter) return false;
     return true;
   });
 }
 
-/**
- * computeDashboard(role, period)
- * Calcula KPIs, sparklines, charts y actividad según rol y período.
- *
- * @param {string} role   — 'founder' | 'team' | 'investor'
- * @param {string} period — '1m' | '3m' | '6m' | '12m'
- * @returns {{ kpis, sparklines, salesData, donutData, activity }}
- */
 function computeDashboard(role, period) {
-  // Obtener datos filtrados
   const data = obtenerDatosFiltrados();
 
   if (!data || data.length === 0) {
@@ -272,26 +198,22 @@ function computeDashboard(role, period) {
     };
   }
 
-  // --- Agrupar por mes ---
   const porMes = agruparPorMes(data);
   const mesesOrdenados = ordenarClavesPorFecha(Object.keys(porMes));
   const periodCount = { '1m': 1, '3m': 3, '6m': 6, '12m': 12 };
   const count = periodCount[period] || 6;
   const ultimosMeses = mesesOrdenados.slice(-count);
 
-  // --- Ventas mensuales (para line chart y sparklines) ---
   const ventasPorMes = ultimosMeses.map((clave) =>
     porMes[clave].reduce((sum, r) => sum + r.monto_venta, 0)
   );
 
-  // --- Totales generales ---
   const totalActivos = data.filter((r) => r.usuario_activo === true).length;
   const totalInactivos = data.filter((r) => r.usuario_activo === false).length;
   const ventasTotales = data.reduce((sum, r) => sum + r.monto_venta, 0);
   const totalRegistros = data.length;
   const ticketPromedio = totalRegistros > 0 ? Math.round(ventasTotales / totalRegistros) : 0;
 
-  // --- Ventas del mes actual y anterior ---
   const mesActual = ultimosMeses[ultimosMeses.length - 1];
   const ventasMesActual = mesActual
     ? porMes[mesActual].reduce((sum, r) => sum + r.monto_venta, 0)
@@ -301,7 +223,6 @@ function computeDashboard(role, period) {
     ? porMes[mesAnterior].reduce((sum, r) => sum + r.monto_venta, 0)
     : 0;
 
-  // --- Crecimiento (% cambio vs mes anterior) ---
   let crecimiento = 0;
   let cambioDir = 'up';
   if (ventasMesAnterior > 0) {
@@ -309,7 +230,6 @@ function computeDashboard(role, period) {
     cambioDir = crecimiento >= 0 ? 'up' : 'down';
   }
 
-  // --- Actividad reciente (últimas 5 transacciones) ---
   const actividad = [...data]
     .sort((a, b) => parseFecha(b.fecha) - parseFecha(a.fecha))
     .slice(0, 5)
@@ -341,7 +261,6 @@ function computeDashboard(role, period) {
       };
     });
 
-  // --- MRR, ARR, CAC, Churn ---
   const mrr =
     ventasPorMes.length > 0
       ? Math.round(ventasPorMes.reduce((a, b) => a + b, 0) / ventasPorMes.length)
@@ -350,7 +269,6 @@ function computeDashboard(role, period) {
   const cac = Math.round(ticketPromedio * 0.3);
   const churn = totalRegistros > 0 ? (totalInactivos / totalRegistros) * 100 : 0;
 
-  // --- Desglose por suscripción ---
   const basicCount = data.filter((r) => r.tipo_suscripcion === 'Basic').length;
   const proCount = data.filter((r) => r.tipo_suscripcion === 'Pro').length;
   const enterpriseCount = data.filter((r) => r.tipo_suscripcion === 'Enterprise').length;
@@ -362,7 +280,6 @@ function computeDashboard(role, period) {
   ];
   const planTop = planes.reduce((max, p) => (p.count > max.count ? p : max), planes[0]);
 
-  // --- KPIs, sparklines, donut según ROL ---
   let kpis, sparklines, donutData, salesData;
 
   if (role === 'founder') {
@@ -504,10 +421,6 @@ function computeDashboard(role, period) {
 // 5. RENDER
 // ============================================================
 
-/**
- * calcularYRenderizar()
- * Lee rol y período del store, computa métricas y renderiza todo.
- */
 function calcularYRenderizar() {
   const { role, periodo } = store.getState();
   const resultado = computeDashboard(role, periodo);
@@ -517,31 +430,27 @@ function calcularYRenderizar() {
   actualizarTooltips();
 }
 
-/**
- * renderKPIs(kpis, sparklines)
- * Actualiza textos y sparklines de las 4 tarjetas KPI.
- */
 function renderKPIs(kpis, sparklines) {
-  const cards = document.querySelectorAll('.kpi-card');
+  const cards = document.querySelectorAll('.tarjeta-kpi');
 
   cards.forEach((card, i) => {
     const kpi = kpis[i];
     if (!kpi) return;
 
-    const labelEl = card.querySelector('.kpi-label-text');
+    const labelEl = card.querySelector('.etiqueta-kpi');
     if (labelEl) labelEl.textContent = kpi.label;
 
-    const valueEl = card.querySelector('.kpi-value');
+    const valueEl = card.querySelector('.valor-kpi');
     if (valueEl) valueEl.textContent = kpi.value;
 
-    const changeEl = card.querySelector('.kpi-change');
+    const changeEl = card.querySelector('.cambio-kpi');
     if (changeEl) {
       changeEl.textContent = kpi.change;
-      changeEl.classList.toggle('change-up', kpi.changeDir === 'up');
-      changeEl.classList.toggle('change-down', kpi.changeDir !== 'up');
+      changeEl.classList.toggle('cambio-positivo', kpi.changeDir === 'up');
+      changeEl.classList.toggle('cambio-negativo', kpi.changeDir !== 'up');
     }
 
-    const sparkCanvas = card.querySelector('.sparkline');
+    const sparkCanvas = card.querySelector('.minigrafico');
     if (sparkCanvas && sparklines && sparklines[i]) {
       const color =
         getComputedStyle(document.documentElement)
@@ -552,13 +461,6 @@ function renderKPIs(kpis, sparklines) {
   });
 }
 
-/**
- * renderSparkline(canvas, data, color)
- * Dibuja un minigráfico SVG de línea dentro de un div.
- * @param {HTMLElement} canvas — el div contenedor
- * @param {number[]}    data   — array de valores numéricos
- * @param {string}      color  — color CSS de la línea
- */
 function renderSparkline(canvas, data, color) {
   if (!canvas || !data || data.length < 2) return;
 
@@ -594,19 +496,11 @@ function renderSparkline(canvas, data, color) {
     </svg>`;
 }
 
-/**
- * renderCharts(salesData, donutData)
- * Dibuja el gráfico de líneas y el donut.
- */
 function renderCharts(salesData, donutData) {
   renderLineChart(salesData);
   renderDonutChart(donutData);
 }
 
-/**
- * renderLineChart(data)
- * Dibuja el gráfico de líneas grande en "Ventas mensuales".
- */
 function renderLineChart(data) {
   const container = document.getElementById('lineChart');
   if (!container || !data || data.length < 2) return;
@@ -633,7 +527,6 @@ function renderLineChart(data) {
   const xScale = (i) => pad.left + (i / (data.length - 1)) * chartW;
   const yScale = (v) => pad.top + chartH - ((v - min) / range) * chartH;
 
-  // Área rellena
   const fillPath =
     data
       .map((v, i) => `${i === 0 ? 'M' : 'L'}${xScale(i)},${yScale(v)}`)
@@ -642,7 +535,7 @@ function renderLineChart(data) {
     ` L${xScale(0)},${pad.top + chartH} Z`;
 
   container.innerHTML = `
-    <svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" class="w-full h-full">
+    <svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" style="width:100%;height:100%">
       <defs>
         <linearGradient id="lineFillDyn" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stop-color="${accent}" stop-opacity="0.2"/>
@@ -685,18 +578,13 @@ function renderLineChart(data) {
     </svg>`;
 }
 
-/**
- * renderDonutChart(data)
- * Dibuja el gráfico de dona en "Usuarios".
- * data = { nuevos, activos, inactivos }
- */
 function renderDonutChart(data) {
   const container = document.getElementById('donutChart');
   if (!container) return;
 
   const total = (data.activos || 0) + (data.inactivos || 0);
   if (total === 0) {
-    container.innerHTML = '<p class="text-sm text-muted">Sin datos</p>';
+    container.innerHTML = '<p class="grafico-dona__vacio">Sin datos</p>';
     return;
   }
 
@@ -705,7 +593,6 @@ function renderDonutChart(data) {
     { label: 'Inactivos', value: data.inactivos || 0, color: '#64748B' },
   ];
 
-  // Agregar "Nuevos" si existe
   if (data.nuevos && data.nuevos > 0) {
     segmentos.unshift({ label: 'Básicos', value: data.nuevos, color: '#3B82F6' });
   }
@@ -739,20 +626,20 @@ function renderDonutChart(data) {
       `
         )
         .join('')}
-      <text x="${cx}" y="${cy - 5}" text-anchor="middle" class="svg-text-center"
+      <text x="${cx}" y="${cy - 5}" text-anchor="middle" class="svg-texto-centro"
             font-size="28" font-weight="800">${total.toLocaleString()}</text>
-      <text x="${cx}" y="${cy + 14}" text-anchor="middle" class="svg-text-muted"
+      <text x="${cx}" y="${cy + 14}" text-anchor="middle" class="svg-texto-secundario"
             font-size="11">total</text>
     </svg>
-    <div class="flex gap-4 mt-2 flex-wrap justify-center">
+    <div class="grafico-dona__leyenda">
       ${segmentos
         .map(
           (s) => `
-        <div class="flex items-center gap-1.5">
-          <span class="w-2 h-2 rounded-full" style="background:${s.color}"></span>
-          <span class="text-muted text-xs">
+        <div class="grafico-dona__leyenda-item">
+          <span class="grafico-dona__punto" style="background:${s.color}"></span>
+          <span class="grafico-dona__leyenda-texto">
             ${s.label}
-            <span class="svg-text-center font-medium">${Math.round(
+            <span class="grafico-dona__porcentaje">${Math.round(
               (s.value / total) * 100
             )}%</span>
           </span>
@@ -763,64 +650,38 @@ function renderDonutChart(data) {
     </div>`;
 }
 
-/**
- * renderActivity(activity)
- * Llena la lista <ul id="activityList"> con datos de la API.
- * Soporta tanto #activityBody (tabla) como #activityList (ul).
- */
 function renderActivity(activity) {
-  // Intentar con tabla primero, luego ul como fallback
   const tbody = document.getElementById('activityBody');
-  const ul = document.getElementById('activityList');
-  
-  if (!tbody && !ul) return;
-
-  const emptyMsg = `
-    <tr class="text-center"><td colspan="3" class="px-6 py-8 text-sm text-muted">No hay actividad reciente</td></tr>`;
+  if (!tbody) return;
 
   if (!activity || activity.length === 0) {
-    if (tbody) tbody.innerHTML = emptyMsg;
+    tbody.innerHTML = '<tr class="fila-vacia"><td colspan="3">No hay actividad reciente</td></tr>';
     return;
   }
 
   const rows = activity.map(item => {
-    return `<tr class="activity-row cursor-pointer" data-id="${item.id}">
-      <td class="px-6 py-4">
-        <div class="flex items-center gap-3">
-          <span class="w-2 h-2 rounded-full flex-shrink-0 activity-dot-${item.tipo}" aria-hidden="true"></span>
-          <span class="font-medium text-sm truncate">${item.titulo}</span>
+    const dotClass = item.tipo === 'activo' ? 'punto-activo' : 'punto-inactivo';
+    return `<tr class="fila-actividad" data-id="${item.id}">
+      <td class="fila-actividad__celda">
+        <div class="fila-actividad__transaccion">
+          <span class="${dotClass}" aria-hidden="true"></span>
+          <span class="fila-actividad__titulo">${item.titulo}</span>
         </div>
       </td>
-      <td class="px-6 py-4 text-sm text-muted">${item.detalle}</td>
-      <td class="px-6 py-4 text-sm text-muted text-right whitespace-nowrap">${item.tiempo}</td>
+      <td class="fila-actividad__celda fila-actividad__detalle">${item.detalle}</td>
+      <td class="fila-actividad__celda fila-actividad__tiempo">${item.tiempo}</td>
     </tr>`;
   }).join('');
 
-  if (tbody) tbody.innerHTML = rows;
-  if (ul) {
-    ul.innerHTML = activity.map(item => `
-      <li class="activity-row flex items-center gap-4 px-6 py-4 cursor-pointer" data-id="${item.id}">
-        <span class="w-2 h-2 rounded-full flex-shrink-0 activity-dot-${item.tipo}" aria-hidden="true"></span>
-        <div class="flex-1 min-w-0">
-          <p class="text-sm font-medium truncate">${item.titulo}</p>
-          <p class="text-xs text-muted">${item.detalle}</p>
-        </div>
-        <span class="text-xs flex-shrink-0 text-muted">${item.tiempo}</span>
-      </li>
-    `).join('');
-  }
+  tbody.innerHTML = rows;
 }
 
-/**
- * actualizarTooltips()
- * Sincroniza el texto de los tooltips con la métrica que muestra cada KPI.
- */
 function actualizarTooltips() {
-  document.querySelectorAll('.kpi-card').forEach((card) => {
-    const labelEl = card.querySelector('.kpi-label-text');
-    const trigger = card.querySelector('.tooltip-trigger');
+  document.querySelectorAll('.tarjeta-kpi').forEach((card) => {
+    const labelEl = card.querySelector('.etiqueta-kpi');
+    const trigger = card.querySelector('.disparador-tooltip');
     if (!labelEl || !trigger) return;
-    const tip = trigger.querySelector('.tooltip-content');
+    const tip = trigger.querySelector('.contenido-tooltip');
     if (!tip) return;
     tip.textContent = tooltips[labelEl.textContent] || 'Información de esta métrica';
   });
@@ -830,56 +691,41 @@ function actualizarTooltips() {
 // 6. UI / EVENT LISTENERS
 // ============================================================
 
-/**
- * setTheme(theme)
- * Cambia entre modo oscuro y claro.
- * Persiste en localStorage y re-renderiza charts (cambian colores).
- */
 function setTheme(theme) {
   store.setState({ theme });
   document.documentElement.classList.toggle('dark', theme === 'dark');
   document.documentElement.classList.toggle('light', theme !== 'dark');
 
-  // Actualizar iconos de sol/luna
-  const sun = document.querySelector('.sun-icon');
-  const moon = document.querySelector('.moon-icon');
+  const sun = document.querySelector('.icono-sol');
+  const moon = document.querySelector('.icono-luna');
   if (theme === 'dark') {
-    sun?.classList.add('hidden');
-    moon?.classList.remove('hidden');
+    sun?.classList.add('oculto');
+    moon?.classList.remove('oculto');
   } else {
-    sun?.classList.remove('hidden');
-    moon?.classList.add('hidden');
+    sun?.classList.remove('oculto');
+    moon?.classList.add('oculto');
   }
 
-  // Persistir en localStorage
   try {
     localStorage.setItem('startuptools_theme', theme);
   } catch (e) {
-    // Sin fallback si localStorage no está disponible
+    // localStorage no disponible
   }
 
-  // Re-renderizar gráficos porque los colores cambian
   const { role, periodo } = store.getState();
   const resultado = computeDashboard(role, periodo);
   renderCharts(resultado.salesData, resultado.donutData);
 }
 
-/**
- * setRole(role)
- * Cambia el rol activo, actualiza UI y recalcula dashboard.
- */
 function setRole(role) {
   store.setState({ role });
 
-  // Marcar botón activo visualmente
-  document.querySelectorAll('.role-btn').forEach((btn) => {
+  document.querySelectorAll('.boton-rol').forEach((btn) => {
     const activo = btn.dataset.role === role;
-    btn.classList.toggle('active', activo);
-    btn.classList.toggle('role-active', activo);
-    btn.classList.toggle('role-inactive', !activo);
+    btn.classList.toggle('rol-activo', activo);
+    btn.classList.toggle('rol-inactivo', !activo);
   });
 
-  // Feedback visual: título e iniciales del avatar
   const nombresRol = { founder: 'Fundador', team: 'Equipo', investor: 'Inversor' };
   const initialsRol = { founder: 'FD', team: 'EQ', investor: 'IN' };
   const titleEl = document.getElementById('dashboardTitle');
@@ -887,7 +733,6 @@ function setRole(role) {
   if (titleEl) titleEl.textContent = `Dashboard — ${nombresRol[role] || role}`;
   if (avatarEl) avatarEl.textContent = initialsRol[role] || 'ST';
 
-  // Persistir en localStorage
   try {
     localStorage.setItem('startuptools_role', role);
   } catch (e) {
@@ -897,10 +742,6 @@ function setRole(role) {
   calcularYRenderizar();
 }
 
-/**
- * toggleSidebar()
- * Abre/cierra la sidebar en mobile.
- */
 function toggleSidebar() {
   const { sidebarOpen } = store.getState();
   const nuevoEstado = !sidebarOpen;
@@ -909,19 +750,13 @@ function toggleSidebar() {
   const sidebar = document.getElementById('sidebar');
   const overlay = document.getElementById('sidebarOverlay');
 
-  if (sidebar) sidebar.classList.toggle('collapsed', !nuevoEstado);
-
   if (window.innerWidth < 1024) {
     if (sidebar) sidebar.classList.toggle('mobile-open', nuevoEstado);
-    if (overlay) overlay.classList.toggle('hidden', !nuevoEstado);
+    if (overlay) overlay.classList.toggle('oculto', !nuevoEstado);
     document.body.classList.toggle('overflow-hidden', nuevoEstado);
   }
 }
 
-/**
- * setPeriodo(periodo)
- * Cambia el filtro temporal y recalcula dashboard.
- */
 function setPeriodo(periodo) {
   store.setState({ periodo });
 
@@ -937,10 +772,6 @@ function setPeriodo(periodo) {
   calcularYRenderizar();
 }
 
-/**
- * openModal(id)
- * Muestra el modal con detalle de una transacción.
- */
 function openModal(id) {
   const { rawData } = store.getState();
   const item = rawData.find((r) => r.id == id);
@@ -955,98 +786,77 @@ function openModal(id) {
   const body = document.getElementById('modalBody');
   if (body) {
     body.innerHTML = `
-      <div class="flex justify-between py-1">
-        <span class="text-muted">ID:</span>
-        <span class="text-primary font-medium">#${item.id}</span>
+      <div class="modal__fila">
+        <span class="modal__fila-etiqueta">ID:</span>
+        <span class="modal__fila-valor">#${item.id}</span>
       </div>
-      <div class="flex justify-between py-1">
-        <span class="text-muted">Cliente:</span>
-        <span class="text-primary font-medium">${clientes[item.id % clientes.length]}</span>
+      <div class="modal__fila">
+        <span class="modal__fila-etiqueta">Cliente:</span>
+        <span class="modal__fila-valor">${clientes[item.id % clientes.length]}</span>
       </div>
-      <div class="flex justify-between py-1">
-        <span class="text-muted">Fecha:</span>
-        <span class="text-primary font-medium">${item.fecha}</span>
+      <div class="modal__fila">
+        <span class="modal__fila-etiqueta">Fecha:</span>
+        <span class="modal__fila-valor">${item.fecha}</span>
       </div>
-      <div class="flex justify-between py-1">
-        <span class="text-muted">Plan:</span>
-        <span class="font-medium subscription-color" data-plan="${item.tipo_suscripcion}">${item.tipo_suscripcion}</span>
+      <div class="modal__fila">
+        <span class="modal__fila-etiqueta">Plan:</span>
+        <span class="color-suscripcion modal__fila-valor" data-plan="${item.tipo_suscripcion}">${item.tipo_suscripcion}</span>
       </div>
-      <div class="flex justify-between py-1">
-        <span class="text-muted">Monto:</span>
-        <span class="text-primary font-medium">$${item.monto_venta.toLocaleString()}</span>
+      <div class="modal__fila">
+        <span class="modal__fila-etiqueta">Monto:</span>
+        <span class="modal__fila-valor">$${item.monto_venta.toLocaleString()}</span>
       </div>
-      <div class="flex justify-between py-1">
-        <span class="text-muted">Gateway:</span>
-        <span class="text-primary font-medium">${gateways[item.id % gateways.length]}</span>
+      <div class="modal__fila">
+        <span class="modal__fila-etiqueta">Gateway:</span>
+        <span class="modal__fila-valor">${gateways[item.id % gateways.length]}</span>
       </div>
-      <div class="flex justify-between py-1">
-        <span class="text-muted">Usuario activo:</span>
-        <span class="font-medium ${item.usuario_activo ? 'text-accent-green' : 'text-accent-orange'}">${item.usuario_activo ? 'Sí' : 'No'}</span>
+      <div class="modal__fila">
+        <span class="modal__fila-etiqueta">Usuario activo:</span>
+        <span class="modal__fila-valor ${item.usuario_activo ? 'cambio-positivo' : 'cambio-negativo'}">${item.usuario_activo ? 'Sí' : 'No'}</span>
       </div>
     `;
   }
 
   const modal = document.getElementById('detailModal');
-  if (modal) modal.classList.remove('hidden');
+  if (modal) modal.classList.remove('oculto');
 }
 
-/**
- * closeModal()
- * Cierra el modal de detalle.
- */
 function closeModal() {
   const modal = document.getElementById('detailModal');
-  if (modal) modal.classList.add('hidden');
+  if (modal) modal.classList.add('oculto');
 }
 
-/**
- * setupTooltips()
- * Conecta eventos mouseenter/mouseleave a los tooltips.
- */
 function setupTooltips() {
-  document.querySelectorAll('.tooltip-trigger').forEach((el) => {
+  document.querySelectorAll('.disparador-tooltip').forEach((el) => {
     el.addEventListener('mouseenter', function () {
-      const tip = this.querySelector('.tooltip-content');
+      const tip = this.querySelector('.contenido-tooltip');
       if (tip) tip.classList.add('tooltip-visible');
     });
     el.addEventListener('mouseleave', function () {
-      const tip = this.querySelector('.tooltip-content');
+      const tip = this.querySelector('.contenido-tooltip');
       if (tip) tip.classList.remove('tooltip-visible');
     });
   });
 }
 
-/**
- * mostrarLoading(visible)
- * Muestra/oculta la pantalla de carga.
- */
 function mostrarLoading(visible) {
   const loader = document.getElementById('loadingState');
   const content = document.getElementById('dashboardContent');
-  if (loader) loader.classList.toggle('hidden', !visible);
-  if (content) content.classList.toggle('hidden', visible);
+  if (loader) loader.classList.toggle('oculto', !visible);
+  if (content) content.classList.toggle('oculto', visible);
 }
 
-/**
- * mostrarError(mensaje)
- * Muestra pantalla de error con mensaje.
- */
 function mostrarError(mensaje) {
   const errorEl = document.getElementById('errorState');
   const content = document.getElementById('dashboardContent');
   if (errorEl) {
-    errorEl.classList.remove('hidden');
-    const msgEl = errorEl.querySelector('.error-message');
+    errorEl.classList.remove('oculto');
+    const msgEl = errorEl.querySelector('.mensaje-error');
     if (msgEl) msgEl.textContent = mensaje;
   }
-  if (content) content.classList.add('hidden');
+  if (content) content.classList.add('oculto');
 }
 
-/**
- * exportToCSV()
- * Genera y descarga un archivo CSV con los datos actuales.
- * Usa los mismos filtros que computeDashboard (vía obtenerDatosFiltrados).
- */
 function exportToCSV() {
   const data = obtenerDatosFiltrados();
 
@@ -1063,7 +873,6 @@ function exportToCSV() {
     { key: 'usuario_activo', label: 'Activo' },
   ];
 
-  // Mapear boolean a texto
   const dataForExport = data.map((item) => ({
     ...item,
     usuario_activo: item.usuario_activo ? 'Sí' : 'No',
@@ -1074,12 +883,6 @@ function exportToCSV() {
   downloadFile(csv, `startuptools_export_${timestamp}.csv`);
 }
 
-/**
- * filterByDateRange(start, end)
- * Filtra los datos por un rango de fechas.
- * @param {Date|null} start — fecha de inicio (incluída)
- * @param {Date|null} end   — fecha de fin (incluída)
- */
 function filterByDateRange(start, end) {
   store.setState({
     dateRangeStart: start || null,
@@ -1088,20 +891,11 @@ function filterByDateRange(start, end) {
   calcularYRenderizar();
 }
 
-/**
- * filterByPlan(plan)
- * Filtra los datos por tipo de suscripción.
- * @param {string|null} plan — 'Basic', 'Pro', 'Enterprise' o null para quitar filtro
- */
 function filterByPlan(plan) {
   store.setState({ planFilter: plan || null });
   calcularYRenderizar();
 }
 
-/**
- * clearFilters()
- * Limpia todos los filtros avanzados.
- */
 function clearFilters() {
   store.setState({
     dateRangeStart: null,
@@ -1111,33 +905,23 @@ function clearFilters() {
   calcularYRenderizar();
 }
 
-/**
- * setupDownloadReport()
- * Simula la descarga de un reporte semanal con feedback visual en el botón
- * y un toast de confirmación.
- */
 function setupDownloadReport() {
   const btn = document.getElementById('downloadReportBtn');
   if (!btn) return;
 
   btn.addEventListener('click', function () {
-    // 1. Cambiar estado a "Cargando..."
     const textoOriginal = this.textContent;
     this.textContent = 'Cargando...';
     this.disabled = true;
 
-    // 2. Simular carga de 1.5s
     setTimeout(() => {
-      // 3. Mostrar mensaje de éxito
       this.textContent = '✅ Descargado';
-      
-      // 4. Crear toast de éxito
+
       const toast = document.createElement('div');
-      toast.className = 'fixed bottom-6 right-6 px-4 py-3 rounded-lg shadow-lg text-sm font-medium z-50 modal-body border border-theme';
+      toast.className = 'toast';
       toast.textContent = 'Reporte semanal generado correctamente';
       document.body.appendChild(toast);
 
-      // 5. Restaurar botón después de 2s
       setTimeout(() => {
         this.textContent = textoOriginal;
         this.disabled = false;
@@ -1147,16 +931,7 @@ function setupDownloadReport() {
   });
 }
 
-/**
- * setupEventListeners(fetchDashboardData)
- * Configura todos los event listeners del dashboard.
- * Recibe fetchDashboardData como parámetro para evitar
- * dependencia circular entre módulos.
- *
- * @param {Function} fetchDashboardData — función de fetch con retry
- */
 function setupEventListeners(fetchDashboardData) {
-  // --- Restaurar de localStorage ---
   try {
     const savedTheme = localStorage.getItem('startuptools_theme');
     if (savedTheme === 'light' || savedTheme === 'dark') {
@@ -1172,15 +947,12 @@ function setupEventListeners(fetchDashboardData) {
       setRole('founder');
     }
   } catch (e) {
-    // localStorage no disponible, valores por defecto
     setTheme('dark');
     setRole('founder');
   }
 
-  // --- Tooltips (hover) ---
   setupTooltips();
 
-  // --- Toggle de tema ---
   const themeToggle = document.getElementById('themeToggle');
   if (themeToggle) {
     themeToggle.addEventListener('click', () => {
@@ -1189,7 +961,6 @@ function setupEventListeners(fetchDashboardData) {
     });
   }
 
-  // --- Sidebar hamburguesa ---
   const sidebarToggle = document.getElementById('sidebarToggle');
   if (sidebarToggle) {
     sidebarToggle.addEventListener('click', toggleSidebar);
@@ -1199,18 +970,15 @@ function setupEventListeners(fetchDashboardData) {
     sidebarOverlay.addEventListener('click', toggleSidebar);
   }
 
-  // --- Botones de rol ---
-  document.querySelectorAll('.role-btn').forEach((btn) => {
+  document.querySelectorAll('.boton-rol').forEach((btn) => {
     btn.addEventListener('click', () => setRole(btn.dataset.role));
   });
 
-  // --- Botón Reintentar (error state) ---
   const retryBtn = document.getElementById('retryBtn');
   if (retryBtn) {
     retryBtn.addEventListener('click', fetchDashboardData);
   }
 
-  // --- Selector de período ---
   const periodoSelector = document.getElementById('periodoSelector');
   if (periodoSelector) {
     periodoSelector.addEventListener('change', (e) => {
@@ -1218,7 +986,6 @@ function setupEventListeners(fetchDashboardData) {
     });
   }
 
-  // --- Modal: cerrar ---
   const closeModalBtn = document.getElementById('closeModal');
   if (closeModalBtn) {
     closeModalBtn.addEventListener('click', closeModal);
@@ -1235,34 +1002,28 @@ function setupEventListeners(fetchDashboardData) {
     if (e.key === 'Escape') closeModal();
   });
 
-  // --- Modal: clic en actividad reciente (tabla o lista) ---
-  ['activityList', 'activityBody'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.addEventListener('click', (e) => {
-        const row = e.target.closest('.activity-row');
-        if (row && row.dataset.id) openModal(row.dataset.id);
-      });
-    }
-  });
+  const activityBody = document.getElementById('activityBody');
+  if (activityBody) {
+    activityBody.addEventListener('click', (e) => {
+      const row = e.target.closest('.fila-actividad');
+      if (row && row.dataset.id) openModal(row.dataset.id);
+    });
+  }
 
-  // --- Botón de exportar CSV (preparado para cuando exista en HTML) ---
   const exportBtn = document.getElementById('exportCsvBtn');
   if (exportBtn) {
     exportBtn.addEventListener('click', exportToCSV);
   }
 
-  // --- Botón de descargar reporte semanal ---
   setupDownloadReport();
 
-  // --- Window resize: cerrar sidebar mobile y re-renderizar charts ---
   let resizeTimer;
   window.addEventListener('resize', () => {
     const sidebar = document.getElementById('sidebar');
     if (window.innerWidth >= 1024) {
       if (sidebar) sidebar.classList.remove('mobile-open');
       const overlay = document.getElementById('sidebarOverlay');
-      if (overlay) overlay.classList.add('hidden');
+      if (overlay) overlay.classList.add('oculto');
       document.body.classList.remove('overflow-hidden');
     }
 
@@ -1279,25 +1040,11 @@ function setupEventListeners(fetchDashboardData) {
 // 7. API / FETCH
 // ============================================================
 
-// URL de la API de Mockaroo
 const API_URL = 'https://my.api.mockaroo.com/dashboard.json?key=c6b83760';
 
-// Configuración de reintentos
 const MAX_RETRIES = 3;
-const BASE_DELAY = 2000; // 2 segundos
+const BASE_DELAY = 2000;
 
-/**
- * fetchConRetry(url, retries, baseDelay)
- * Función interna que realiza el fetch con reintentos y backoff exponencial.
- *
- * Estrategia: 3 intentos con esperas de 2s, 4s y 8s.
- * Diferenciación de errores: 429 (cuota), 403 (key), network / HTTP.
- *
- * @param {string}  url       — URL del recurso
- * @param {number}  retries   — cantidad máxima de reintentos
- * @param {number}  baseDelay — milisegundos base para el backoff
- * @returns {Promise<Array>}  — datos parseados como JSON
- */
 async function fetchConRetry(url, retries = MAX_RETRIES, baseDelay = BASE_DELAY) {
   let lastError = null;
 
@@ -1305,12 +1052,10 @@ async function fetchConRetry(url, retries = MAX_RETRIES, baseDelay = BASE_DELAY)
     try {
       const respuesta = await fetch(url);
 
-      // Si la respuesta es exitosa (200-299), devolvemos los datos
       if (respuesta.ok) {
         return await respuesta.json();
       }
 
-      // Errores HTTP con mensajes específicos
       if (respuesta.status === 429) {
         throw new Error(
           'Límite de consultas diarias alcanzado (429). Esperá al próximo día o usá otra API key.'
@@ -1322,7 +1067,6 @@ async function fetchConRetry(url, retries = MAX_RETRIES, baseDelay = BASE_DELAY)
         );
       }
 
-      // Otros errores HTTP (500, 404, etc.)
       throw new Error(
         `Error HTTP ${respuesta.status}: el servidor respondió con un código de error`
       );
@@ -1330,12 +1074,10 @@ async function fetchConRetry(url, retries = MAX_RETRIES, baseDelay = BASE_DELAY)
     } catch (error) {
       lastError = error;
 
-      // Si es el último intento, no esperamos — lanzamos el error directamente
       if (attempt === retries) {
         throw error;
       }
 
-      // Diferenciar entre error de red y error HTTP para el mensaje
       if (error.name === 'TypeError' && error.message.includes('fetch')) {
         console.warn(
           `Intento ${attempt}/${retries}: Error de red. Reintentando en ${baseDelay * Math.pow(2, attempt - 1) / 1000}s...`
@@ -1346,48 +1088,33 @@ async function fetchConRetry(url, retries = MAX_RETRIES, baseDelay = BASE_DELAY)
         );
       }
 
-      // Espera exponencial: 2s, 4s, 8s
       const delay = baseDelay * Math.pow(2, attempt - 1);
       await new Promise((resolve) => setTimeout(resolve, delay));
     }
   }
 
-  // Nunca debería llegar acá, pero por si acaso:
   throw lastError || new Error('Error desconocido al cargar los datos');
 }
 
-/**
- * fetchDashboardData()
- * Obtiene datos de Mockaroo, los guarda en el store,
- * y dispara el render completo del dashboard.
- *
- * Maneja tres estados: loading → success (render) / error (pantalla de error).
- * El botón "Reintentar" está vinculado a esta función desde ui.js.
- */
 async function fetchDashboardData() {
-  // Mostrar pantalla de carga
   store.setState({ loading: true, error: null });
   mostrarLoading(true);
 
   try {
     const datosCrudos = await fetchConRetry(API_URL);
 
-    // Validar que los datos sean un array no vacío
     if (!Array.isArray(datosCrudos) || datosCrudos.length === 0) {
       throw new Error('La API devolvió datos vacíos o con formato incorrecto');
     }
 
-    // Guardar en el store
     store.setState({
       rawData: datosCrudos,
       loading: false,
       error: null,
     });
 
-    // Ocultar loading
     mostrarLoading(false);
 
-    // Calcular todo y renderizar
     try {
       calcularYRenderizar();
     } catch (renderError) {
@@ -1396,7 +1123,6 @@ async function fetchDashboardData() {
     }
 
   } catch (error) {
-    // Si algo sale mal (sin internet, CORS, API caída, etc.)
     console.error('Error al cargar datos:', error);
 
     store.setState({
@@ -1414,10 +1140,6 @@ async function fetchDashboardData() {
 // ============================================================
 
 document.addEventListener('DOMContentLoaded', () => {
-  // 1. Configurar todos los event listeners del dashboard
-  //    Pasamos fetchDashboardData para evitar dep. circular
   setupEventListeners(fetchDashboardData);
-
-  // 2. Iniciar carga de datos desde Mockaroo
   fetchDashboardData();
 });

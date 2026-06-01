@@ -87,19 +87,19 @@ async function runTests() {
 
   // ── 4. KPIs se ven con valores ──
   await test('4. KPIs renderizados con valores', async () => {
-    const cards = page.locator('.kpi-card');
+    const cards = page.locator('.tarjeta-kpi');
     const count = await cards.count();
     if (count !== 4) throw new Error(`Expected 4 KPI cards, got ${count}`);
 
     for (let i = 0; i < count; i++) {
-      const value = await cards.nth(i).locator('.kpi-value').textContent();
+      const value = await cards.nth(i).locator('.valor-kpi').textContent();
       if (!value || value.trim() === '') throw new Error(`KPI ${i} sin valor`);
     }
   });
 
   // ── 5. Sparklines SVG ──
   await test('5. Sparklines SVG renderizados', async () => {
-    const sparklines = page.locator('.sparkline svg');
+    const sparklines = page.locator('.minigrafico svg');
     const count = await sparklines.count();
     if (count !== 4) throw new Error(`Expected 4 sparklines, got ${count}`);
   });
@@ -135,7 +135,7 @@ async function runTests() {
 
   // ── 10. Switch de roles ──
   await test('10. Click Equipo cambia título y KPIs', async () => {
-    const teamBtn = page.locator('.role-btn[data-role="team"]');
+    const teamBtn = page.locator('.boton-rol[data-role="team"]');
     await teamBtn.click();
     await page.waitForTimeout(300);
 
@@ -147,7 +147,7 @@ async function runTests() {
   });
 
   await test('11. Click Inversor cambia título y KPIs', async () => {
-    const invBtn = page.locator('.role-btn[data-role="investor"]');
+    const invBtn = page.locator('.boton-rol[data-role="investor"]');
     await invBtn.click();
     await page.waitForTimeout(300);
 
@@ -156,7 +156,7 @@ async function runTests() {
   });
 
   await test('12. Click Fundador vuelve a estado inicial', async () => {
-    const fBtn = page.locator('.role-btn[data-role="founder"]');
+    const fBtn = page.locator('.boton-rol[data-role="founder"]');
     await fBtn.click();
     await page.waitForTimeout(300);
 
@@ -195,13 +195,13 @@ async function runTests() {
 
   // ── 16. Modal: clic en actividad ──
   await test('16. Modal se abre al click en actividad', async () => {
-    const firstRow = page.locator('.activity-row').first();
+    const firstRow = page.locator('.fila-actividad').first();
     await firstRow.waitFor({ state: 'visible', timeout: 5000 });
     await firstRow.click();
     await page.waitForTimeout(300);
 
     const modal = page.locator('#detailModal');
-    const isVisible = await modal.evaluate(el => !el.classList.contains('hidden'));
+    const isVisible = await modal.evaluate(el => !el.classList.contains('oculto'));
     if (!isVisible) throw new Error('Modal no se abrió');
   });
 
@@ -219,29 +219,29 @@ async function runTests() {
     await closeBtn.click();
     await page.waitForTimeout(300);
     const modal = page.locator('#detailModal');
-    const isHidden = await modal.evaluate(el => el.classList.contains('hidden'));
+    const isHidden = await modal.evaluate(el => el.classList.contains('oculto'));
     if (!isHidden) throw new Error('Modal no se cerró');
   });
 
   // ── 19. Modal se abre y cierra con Escape ──
   await test('19. Modal se cierra con tecla Escape', async () => {
-    const firstRow = page.locator('.activity-row').first();
+    const firstRow = page.locator('.fila-actividad').first();
     await firstRow.click();
     await page.waitForTimeout(200);
     await page.keyboard.press('Escape');
     await page.waitForTimeout(200);
     const modal = page.locator('#detailModal');
-    const isHidden = await modal.evaluate(el => el.classList.contains('hidden'));
+    const isHidden = await modal.evaluate(el => el.classList.contains('oculto'));
     if (!isHidden) throw new Error('Modal no se cerró con Escape');
   });
 
   // ── 20. Tooltips ──
   await test('20. Tooltip se muestra al hover', async () => {
     const hasJsClass = await page.evaluate(() => {
-      const trigger = document.querySelector('.tooltip-trigger');
+      const trigger = document.querySelector('.disparador-tooltip');
       if (!trigger) return false;
       trigger.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
-      const tip = trigger.querySelector('.tooltip-content');
+      const tip = trigger.querySelector('.contenido-tooltip');
       if (!tip) return false;
       return tip.classList.contains('tooltip-visible');
     });

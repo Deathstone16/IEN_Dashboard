@@ -18,249 +18,252 @@
   <meta name="twitter:title" content="StartupTools — Dashboard de métricas para startups">
   <meta name="twitter:description" content="Métricas de negocio en tiempo real para tu startup. Personalizable por rol.">
   <meta name="twitter:image" content="https://startuptools.app/og-image.png">
-  <!-- Schema.org structured data (JSON-LD) incluido inline arriba -->
   <link rel="stylesheet" href="css/styles.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <script src="js/app.js" defer></script>
 </head>
-<body class="font-sans antialiased bg-primary text-primary">
+<body class="cuerpo">
 
-<div class="flex h-screen overflow-hidden">
+<div class="pagina">
+
+  <!-- Sidebar overlay -->
+  <div id="sidebarOverlay" class="superposicion oculto"></div>
 
   <!-- Sidebar -->
-  <div id="sidebarOverlay" class="hidden fixed inset-0 z-30 lg:hidden bg-overlay"></div>
-
-  <aside id="sidebar" role="navigation" aria-label="Navegación principal" class="w-60 flex-shrink-0 border-r flex flex-col bg-sidebar border-theme">
-    <div class="flex items-center gap-3 px-6 h-16 border-b border-theme">
-      <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-[#3B82F6] to-[#8B5CF6] flex items-center justify-center text-white font-bold text-sm">ST</div>
-      <span class="logo-text font-bold text-lg whitespace-nowrap">StartupTools</span>
+  <aside id="sidebar" class="barra-lateral" role="navigation" aria-label="Navegación principal">
+    <div class="barra-lateral__encabezado">
+      <div class="barra-lateral__logo">ST</div>
+      <span class="barra-lateral__titulo">StartupTools</span>
     </div>
-    <nav>
-      <ul class="space-y-1 px-3">
-        <li><a href="/" class="nav-item active flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium bg-accent-blue-10 text-accent-blue" aria-current="page">
-          <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+    <nav class="barra-lateral__nav">
+      <ul class="barra-lateral__lista">
+        <li><a href="/" class="enlace-nav enlace-nav--activo" aria-current="page">
+          <svg class="enlace-nav__icono" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
           <span>Dashboard</span>
         </a></li>
-        <li><a href="/usuarios" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-muted">
-          <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+        <li><a href="/usuarios" class="enlace-nav">
+          <svg class="enlace-nav__icono" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
           <span>Usuarios</span>
         </a></li>
-        <li><a href="/ventas" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-muted">
-          <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+        <li><a href="/ventas" class="enlace-nav">
+          <svg class="enlace-nav__icono" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
           <span>Ventas</span>
         </a></li>
       </ul>
     </nav>
-    <div class="mt-auto px-3 pb-4">
-      <div class="p-3 rounded-lg bg-primary">
-        <p class="text-xs font-medium mb-2 text-secondary">Rol</p>
-        <div id="roleSelector" class="flex gap-1">
-          <button class="role-btn flex-1 px-2 py-1.5 text-xs font-medium rounded-md role-active" data-role="founder">Fundador</button>
-          <button class="role-btn flex-1 px-2 py-1.5 text-xs font-medium rounded-md role-inactive" data-role="team">Equipo</button>
-          <button class="role-btn flex-1 px-2 py-1.5 text-xs font-medium rounded-md role-inactive" data-role="investor">Inversor</button>
+    <div class="barra-lateral__inferior">
+      <div class="selector-rol__panel">
+        <p class="selector-rol__etiqueta">Rol</p>
+        <div id="roleSelector" class="selector-rol">
+          <button class="boton-rol rol-activo" data-role="founder">Fundador</button>
+          <button class="boton-rol rol-inactivo" data-role="team">Equipo</button>
+          <button class="boton-rol rol-inactivo" data-role="investor">Inversor</button>
         </div>
       </div>
     </div>
   </aside>
 
   <!-- Main -->
-  <main class="flex-1 flex flex-col overflow-hidden">
+  <main class="contenido-principal">
 
     <!-- Header -->
-    <header class="h-16 flex items-center justify-between px-4 lg:px-8 border-b flex-shrink-0 border-theme bg-primary">
-      <div class="flex items-center gap-4">
-        <button id="sidebarToggle" class="lg:hidden w-8 h-8 rounded-lg flex items-center justify-center transition-colors text-muted" aria-label="Abrir menú" aria-expanded="false">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    <header class="encabezado">
+      <div class="encabezado__izquierda">
+        <button id="sidebarToggle" class="boton-hamburguesa" aria-label="Abrir menú" aria-expanded="false">
+          <svg class="boton-hamburguesa__icono" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
         </button>
-        <h1 id="dashboardTitle" class="text-xl font-bold">Dashboard</h1>
-        <select id="periodoSelector" class="text-xs rounded-lg px-2 py-1 border bg-card text-primary border-theme">
+        <h1 id="dashboardTitle" class="encabezado__titulo">Dashboard</h1>
+        <select id="periodoSelector" class="selector-periodo">
           <option value="1m">Este mes</option>
           <option value="3m">Último trimestre</option>
           <option value="6m" selected>Últimos 6 meses</option>
           <option value="12m">Histórico</option>
         </select>
       </div>
-      <div class="flex items-center gap-4">
-        <button id="themeToggle" class="w-9 h-9 rounded-lg flex items-center justify-center transition-colors text-muted" title="Cambiar tema" aria-label="Cambiar tema">
-          <svg class="w-5 h-5 sun-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-          <svg class="w-5 h-5 moon-icon hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+      <div class="encabezado__derecha">
+        <button id="themeToggle" class="boton-tema" title="Cambiar tema" aria-label="Cambiar tema">
+          <svg class="icono-sol" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+          <svg class="icono-luna oculto" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
         </button>
-        <div id="avatarInitials" class="w-8 h-8 rounded-full bg-gradient-to-br from-[#3B82F6] to-[#8B5CF6] flex items-center justify-center text-white text-xs font-bold">ST</div>
+        <div id="avatarInitials" class="avatar">ST</div>
       </div>
     </header>
 
     <!-- Loading state -->
-    <div id="loadingState" class="flex-1 flex items-center justify-center">
-      <div class="text-center space-y-4">
-        <div class="w-10 h-10 border-4 border-t-transparent rounded-full animate-spin mx-auto spinner-theme"></div>
-        <p class="text-sm text-muted">Cargando datos del dashboard...</p>
+    <div id="loadingState" class="estado-carga">
+      <div class="estado-carga__contenido">
+        <div class="spinner spinner-tema"></div>
+        <p class="estado-carga__texto">Cargando datos del dashboard...</p>
       </div>
     </div>
 
     <!-- Error state -->
-    <div id="errorState" class="flex-1 hidden flex items-center justify-center">
-      <div class="text-center space-y-4 max-w-md px-8">
-        <div class="w-14 h-14 rounded-full flex items-center justify-center mx-auto bg-accent-red-10">
-          <svg class="w-7 h-7 text-accent-red" fill="none" stroke="currentColor" viewBox="0 0 24 24" role="img" aria-label="Error">
+    <div id="errorState" class="estado-error oculto">
+      <div class="estado-error__contenido">
+        <div class="estado-error__icono">
+          <svg class="estado-error__svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" role="img" aria-label="Error">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/>
           </svg>
         </div>
-        <h2 class="text-lg font-semibold text-primary">Error al cargar datos</h2>
-        <p class="error-message text-sm text-muted"></p>
-        <button id="retryBtn" class="px-4 py-2 rounded-lg text-sm font-medium text-white transition-colors bg-accent-blue">Reintentar</button>
+        <h2 class="estado-error__titulo">Error al cargar datos</h2>
+        <p class="mensaje-error"></p>
+        <button id="retryBtn" class="boton boton--primario">Reintentar</button>
       </div>
     </div>
 
     <!-- Dashboard Content -->
-    <div id="dashboardContent" class="flex-1 overflow-y-auto p-8 space-y-8 hidden">
+    <div id="dashboardContent" class="contenido-dashboard oculto">
 
       <!-- KPI Row -->
-      <section aria-label="Métricas clave" id="kpiRow" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <article class="kpi-card rounded-xl border bg-card border-theme p-5" data-accent="blue">
-          <div class="flex items-center justify-between mb-3">
-            <div class="flex items-center gap-2">
-              <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-accent-blue-10"><svg class="w-4 h-4 text-accent-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg></div>
-              <span class="kpi-label-text text-xs font-medium uppercase tracking-wider text-secondary">Usuarios activos</span>
-              <span class="tooltip-trigger relative inline-flex items-center cursor-help text-muted">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                <span class="tooltip-content tooltip-box"></span>
+      <section aria-label="Métricas clave" id="kpiRow" class="kpi-parrilla">
+        <article class="tarjeta-kpi" data-accent="blue">
+          <div class="tarjeta-kpi__encabezado">
+            <div class="tarjeta-kpi__etiqueta-grupo">
+              <div class="tarjeta-kpi__icono tarjeta-kpi__icono--azul">
+                <svg class="tarjeta-kpi__svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+              </div>
+              <span class="etiqueta-kpi">Usuarios activos</span>
+              <span class="disparador-tooltip">
+                <svg class="disparador-tooltip__icono" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <span class="contenido-tooltip"></span>
               </span>
             </div>
           </div>
-          <div class="flex items-end justify-between">
-            <div>
-              <span class="kpi-value text-3xl font-bold">2,847</span>
-              <span class="kpi-change ml-2 text-sm font-semibold">+12.5%</span>
+          <div class="tarjeta-kpi__cuerpo">
+            <div class="tarjeta-kpi__valores">
+              <span class="valor-kpi">2,847</span>
+              <span class="cambio-kpi cambio-positivo">+12.5%</span>
             </div>
-            <div class="sparkline w-20 h-10 flex-shrink-0"></div>
+            <div class="minigrafico"></div>
           </div>
         </article>
-        <article class="kpi-card rounded-xl border bg-card border-theme p-5" data-accent="green">
-          <div class="flex items-center justify-between mb-3">
-            <div class="flex items-center gap-2">
-              <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-accent-green-10"><svg class="w-4 h-4 text-accent-green" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg></div>
-              <span class="kpi-label-text text-xs font-medium uppercase tracking-wider text-secondary">Ventas mensuales</span>
-              <span class="tooltip-trigger relative inline-flex items-center cursor-help text-muted">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                <span class="tooltip-content tooltip-box"></span>
+        <article class="tarjeta-kpi" data-accent="green">
+          <div class="tarjeta-kpi__encabezado">
+            <div class="tarjeta-kpi__etiqueta-grupo">
+              <div class="tarjeta-kpi__icono tarjeta-kpi__icono--verde">
+                <svg class="tarjeta-kpi__svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+              </div>
+              <span class="etiqueta-kpi">Ventas mensuales</span>
+              <span class="disparador-tooltip">
+                <svg class="disparador-tooltip__icono" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <span class="contenido-tooltip"></span>
               </span>
             </div>
           </div>
-          <div class="flex items-end justify-between">
-            <div>
-              <span class="kpi-value text-3xl font-bold">$48.6K</span>
-              <span class="kpi-change ml-2 text-sm font-semibold">+8.2%</span>
+          <div class="tarjeta-kpi__cuerpo">
+            <div class="tarjeta-kpi__valores">
+              <span class="valor-kpi">$48.6K</span>
+              <span class="cambio-kpi cambio-positivo">+8.2%</span>
             </div>
-            <div class="sparkline w-20 h-10 flex-shrink-0"></div>
+            <div class="minigrafico"></div>
           </div>
         </article>
-        <article class="kpi-card rounded-xl border bg-card border-theme p-5" data-accent="purple">
-          <div class="flex items-center justify-between mb-3">
-            <div class="flex items-center gap-2">
-              <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-accent-purple-10"><svg class="w-4 h-4 text-accent-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg></div>
-              <span class="kpi-label-text text-xs font-medium uppercase tracking-wider text-secondary">Crecimiento</span>
-              <span class="tooltip-trigger relative inline-flex items-center cursor-help text-muted">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                <span class="tooltip-content tooltip-box"></span>
+        <article class="tarjeta-kpi" data-accent="purple">
+          <div class="tarjeta-kpi__encabezado">
+            <div class="tarjeta-kpi__etiqueta-grupo">
+              <div class="tarjeta-kpi__icono tarjeta-kpi__icono--purpura">
+                <svg class="tarjeta-kpi__svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+              </div>
+              <span class="etiqueta-kpi">Crecimiento</span>
+              <span class="disparador-tooltip">
+                <svg class="disparador-tooltip__icono" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <span class="contenido-tooltip"></span>
               </span>
             </div>
           </div>
-          <div class="flex items-end justify-between">
-            <div>
-              <span class="kpi-value text-3xl font-bold">23.4%</span>
-              <span class="kpi-change ml-2 text-sm font-semibold">-2.1%</span>
+          <div class="tarjeta-kpi__cuerpo">
+            <div class="tarjeta-kpi__valores">
+              <span class="valor-kpi">23.4%</span>
+              <span class="cambio-kpi cambio-negativo">-2.1%</span>
             </div>
-            <div class="sparkline w-20 h-10 flex-shrink-0"></div>
+            <div class="minigrafico"></div>
           </div>
         </article>
-        <article class="kpi-card rounded-xl border bg-card border-theme p-5" data-accent="orange">
-          <div class="flex items-center justify-between mb-3">
-            <div class="flex items-center gap-2">
-              <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-accent-orange-10"><svg class="w-4 h-4 text-accent-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
-              <span class="kpi-label-text text-xs font-medium uppercase tracking-wider text-secondary">MRR</span>
-              <span class="tooltip-trigger relative inline-flex items-center cursor-help text-muted">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                <span class="tooltip-content tooltip-box"></span>
+        <article class="tarjeta-kpi" data-accent="orange">
+          <div class="tarjeta-kpi__encabezado">
+            <div class="tarjeta-kpi__etiqueta-grupo">
+              <div class="tarjeta-kpi__icono tarjeta-kpi__icono--naranja">
+                <svg class="tarjeta-kpi__svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              </div>
+              <span class="etiqueta-kpi">MRR</span>
+              <span class="disparador-tooltip">
+                <svg class="disparador-tooltip__icono" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <span class="contenido-tooltip"></span>
               </span>
             </div>
           </div>
-          <div class="flex items-end justify-between">
-            <div>
-              <span class="kpi-value text-3xl font-bold">$12.4K</span>
-              <span class="kpi-change ml-2 text-sm font-semibold">+5.8%</span>
+          <div class="tarjeta-kpi__cuerpo">
+            <div class="tarjeta-kpi__valores">
+              <span class="valor-kpi">$12.4K</span>
+              <span class="cambio-kpi cambio-positivo">+5.8%</span>
             </div>
-            <div class="sparkline w-20 h-10 flex-shrink-0"></div>
+            <div class="minigrafico"></div>
           </div>
         </article>
       </section>
 
       <!-- Charts -->
-      <section aria-label="Gráficos de métricas" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div class="lg:col-span-2 rounded-xl border p-6 bg-card border-theme">
-          <div class="flex items-center justify-between mb-6">
-            <h2 class="text-lg font-semibold">Ventas mensuales</h2>
-            <span id="chartPeriodLabel" class="text-xs text-muted">Últimos 6 meses</span>
+      <section aria-label="Gráficos de métricas" class="graficos-parrilla">
+        <div class="grafico-linea-contenedor">
+          <div class="grafico__encabezado">
+            <h2 class="grafico__titulo">Ventas mensuales</h2>
+            <span id="chartPeriodLabel" class="grafico__periodo">Últimos 6 meses</span>
           </div>
-          <div id="lineChart" class="w-full h-60" role="img" aria-label="Gráfico de ventas mensuales de los últimos 6 meses"></div>
+          <div id="lineChart" class="grafico-linea" role="img" aria-label="Gráfico de ventas mensuales de los últimos 6 meses"></div>
         </div>
-        <div class="rounded-xl border p-6 bg-card border-theme">
-          <div class="flex items-center justify-between mb-6">
-            <h2 class="text-lg font-semibold">Usuarios</h2>
-            <span class="text-xs text-muted">Distribución</span>
+        <div class="grafico-dona-contenedor">
+          <div class="grafico__encabezado">
+            <h2 class="grafico__titulo">Usuarios</h2>
+            <span class="grafico__periodo">Distribución</span>
           </div>
-          <div id="donutChart" class="w-full flex flex-col items-center h-60" role="img" aria-label="Gráfico de distribución de usuarios"></div>
+          <div id="donutChart" class="grafico-dona" role="img" aria-label="Gráfico de distribución de usuarios"></div>
         </div>
       </section>
 
       <!-- Activity -->
-      <section aria-label="Actividad reciente" class="rounded-xl border overflow-hidden bg-card border-theme">
-        <div class="flex items-center justify-between px-6 py-4 border-b border-theme">
-          <h2 class="text-lg font-semibold">Actividad reciente</h2>
-          <a href="/actividad" class="text-sm font-medium transition-colors text-accent-blue" aria-label="Ver toda la actividad">Ver todo →</a>
+      <section aria-label="Actividad reciente" class="seccion-actividad">
+        <div class="seccion-actividad__encabezado">
+          <h2 class="seccion__titulo">Actividad reciente</h2>
+          <a href="/actividad" class="enlace-actividad" aria-label="Ver toda la actividad">Ver todo →</a>
         </div>
-        <div class="overflow-x-auto">
-          <table id="activityTable" class="w-full text-sm">
+        <div class="seccion-actividad__tabla">
+          <table id="activityTable" class="tabla-actividad">
             <thead>
-              <tr class="border-b border-theme text-xs uppercase tracking-wider text-muted">
-                <th class="px-6 py-3 text-left font-medium">Transacción</th>
-                <th class="px-6 py-3 text-left font-medium">Detalle</th>
-                <th class="px-6 py-3 text-right font-medium">Tiempo</th>
+              <tr>
+                <th class="tabla-actividad__th">Transacción</th>
+                <th class="tabla-actividad__th">Detalle</th>
+                <th class="tabla-actividad__th tabla-actividad__th--derecha">Tiempo</th>
               </tr>
             </thead>
-            <tbody id="activityBody" class="divide-y divide-theme"></tbody>
+            <tbody id="activityBody" class="tabla-actividad__cuerpo"></tbody>
           </table>
         </div>
       </section>
 
-      <!-- Download Report -->
-      <div class="flex justify-center py-4">
-        <button id="downloadReportBtn"
-                class="px-6 py-2.5 rounded-lg text-sm font-medium text-white transition-all duration-200 bg-accent-blue hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-accent-blue focus:ring-offset-2">
-          Descargar Reporte Semanal
-        </button>
+      <!-- Download -->
+      <div class="descarga-contenedor">
+        <button id="downloadReportBtn" class="boton boton--descarga">Descargar Reporte Semanal</button>
       </div>
     </div>
 
     <!-- Footer -->
-    <footer class="border-t border-theme px-6 py-4 mt-8">
-      <p class="text-xs text-muted text-center">
-        StartupTools © 2025 — Dashboard de métricas para startups. Todos los derechos reservados.
-      </p>
+    <footer class="pie-pagina">
+      <p class="pie-pagina__texto">StartupTools © 2025 — Dashboard de métricas para startups. Todos los derechos reservados.</p>
     </footer>
   </main>
 </div>
 
-<!-- Detail Modal -->
-<div id="detailModal" role="dialog" aria-modal="true" aria-label="Detalle de transacción" class="hidden fixed inset-0 z-50 flex items-center justify-center modal-overlay">
-  <div class="rounded-xl border p-6 max-w-md w-full mx-4 modal-body">
-    <div class="flex justify-between items-center mb-4">
-      <h3 class="text-lg font-semibold text-primary">Detalle de transacción</h3>
-      <button id="closeModal" class="w-8 h-8 rounded-lg flex items-center justify-center text-muted hover-bg" aria-label="Cerrar detalle">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+<!-- Modal -->
+<div id="detailModal" class="modal oculto" role="dialog" aria-modal="true" aria-label="Detalle de transacción">
+  <div class="modal__cuerpo">
+    <div class="modal__encabezado">
+      <h3 class="modal__titulo">Detalle de transacción</h3>
+      <button id="closeModal" class="modal__cerrar" aria-label="Cerrar detalle">
+        <svg class="modal__cerrar-icono" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>
     </div>
-    <div id="modalBody" class="space-y-3 text-secondary text-sm"></div>
+    <div id="modalBody" class="modal__contenido"></div>
   </div>
 </div>
 
